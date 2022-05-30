@@ -1,6 +1,8 @@
 type Truck {
  id: ID!
  plateNo: String!
+ page: Int!
+ first: Int!
 }
 type Query {
  paginatedTrucks: [Truck!]!

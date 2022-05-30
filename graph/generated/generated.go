@@ -66,7 +66,9 @@ type ComplexityRoot struct {
 	}
 
 	Truck struct {
+		First   func(childComplexity int) int
 		ID      func(childComplexity int) int
+		Page    func(childComplexity int) int
 		PlateNo func(childComplexity int) int
 	}
 }
@@ -189,12 +191,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Shipment.Truck(childComplexity), true
 
+	case "Truck.first":
+		if e.complexity.Truck.First == nil {
+			break
+		}
+
+		return e.complexity.Truck.First(childComplexity), true
+
 	case "Truck.id":
 		if e.complexity.Truck.ID == nil {
 			break
 		}
 
 		return e.complexity.Truck.ID(childComplexity), true
+
+	case "Truck.page":
+		if e.complexity.Truck.Page == nil {
+			break
+		}
+
+		return e.complexity.Truck.Page(childComplexity), true
 
 	case "Truck.plateNo":
 		if e.complexity.Truck.PlateNo == nil {
@@ -289,6 +305,8 @@ extend type Mutation {
 	{Name: "../trucks.graphqls", Input: `type Truck {
  id: ID!
  plateNo: String!
+ page: Int!
+ first: Int!
 }
 type Query {
  paginatedTrucks: [Truck!]!
@@ -501,6 +519,10 @@ func (ec *executionContext) fieldContext_Mutation_saveTruck(ctx context.Context,
 				return ec.fieldContext_Truck_id(ctx, field)
 			case "plateNo":
 				return ec.fieldContext_Truck_plateNo(ctx, field)
+			case "page":
+				return ec.fieldContext_Truck_page(ctx, field)
+			case "first":
+				return ec.fieldContext_Truck_first(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Truck", field.Name)
 		},
@@ -635,6 +657,10 @@ func (ec *executionContext) fieldContext_Query_paginatedTrucks(ctx context.Conte
 				return ec.fieldContext_Truck_id(ctx, field)
 			case "plateNo":
 				return ec.fieldContext_Truck_plateNo(ctx, field)
+			case "page":
+				return ec.fieldContext_Truck_page(ctx, field)
+			case "first":
+				return ec.fieldContext_Truck_first(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Truck", field.Name)
 		},
@@ -1181,6 +1207,10 @@ func (ec *executionContext) fieldContext_Shipment_truck(ctx context.Context, fie
 				return ec.fieldContext_Truck_id(ctx, field)
 			case "plateNo":
 				return ec.fieldContext_Truck_plateNo(ctx, field)
+			case "page":
+				return ec.fieldContext_Truck_page(ctx, field)
+			case "first":
+				return ec.fieldContext_Truck_first(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Truck", field.Name)
 		},
@@ -1271,6 +1301,94 @@ func (ec *executionContext) fieldContext_Truck_plateNo(ctx context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Truck_page(ctx context.Context, field graphql.CollectedField, obj *model.Truck) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Truck_page(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Page, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Truck_page(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Truck",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Truck_first(ctx context.Context, field graphql.CollectedField, obj *model.Truck) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Truck_first(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.First, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Truck_first(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Truck",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3287,6 +3405,20 @@ func (ec *executionContext) _Truck(ctx context.Context, sel ast.SelectionSet, ob
 		case "plateNo":
 
 			out.Values[i] = ec._Truck_plateNo(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "page":
+
+			out.Values[i] = ec._Truck_page(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "first":
+
+			out.Values[i] = ec._Truck_first(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

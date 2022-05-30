@@ -16,4 +16,6 @@ type Shipment struct {
 type Truck struct {
 	ID      string `json:"id"`
 	PlateNo string `json:"plateNo"`
+	Page    int    `json:"page"`
+	First   int    `json:"first"`
 }
