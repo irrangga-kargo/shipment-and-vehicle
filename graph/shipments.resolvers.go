@@ -22,7 +22,7 @@ func (r *mutationResolver) SaveShipment(ctx context.Context, id *string, name st
 	}
 
 	shipment := &model.Shipment{
-		ID:           fmt.Sprintf("SHIPMENT-%d", len(r.Trucks)+1),
+		ID:           fmt.Sprintf("SHIPMENT-%d", len(r.Shipments)+1),
 		Name:         name,
 		Origin:       origin,
 		Destination:  destination,
