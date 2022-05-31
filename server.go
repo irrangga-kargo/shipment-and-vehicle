@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,6 +26,25 @@ func main() {
 	resolver.Init()
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 
+	records := [][]string{
+		{"first_name", "last_name", "occupation"},
+		{"John", "Doe", "gardener"},
+		{"Lucy", "Smith", "teacher"},
+		{"Brian", "Bethamy", "programmer"},
+	}
+	f, err := os.Create("users.csv")
+	defer f.Close()
+	if err != nil {
+		log.Fatalln("failed to open file", err)
+	}
+	w := csv.NewWriter(f)
+	defer w.Flush()
+	for _, record := range records {
+		if err := w.Write(record); err != nil {
+			log.Fatalln("error writing record to file", err)
+		}
+	}
+
 	// Sender data.
 	from := "irranggaa@gmail.com"
 	password := os.Getenv("EMAILPASSWORD")
@@ -42,7 +62,7 @@ func main() {
 	auth := smtp.PlainAuth("", from, password,
 		smtpHost)
 	// Sending email.
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth,
+	err = smtp.SendMail(smtpHost+":"+smtpPort, auth,
 		from, to, message)
 	if err != nil {
 		fmt.Println(err)
