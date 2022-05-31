@@ -9,4 +9,5 @@ type Query {
 }
 type Mutation {
  saveTruck(id: ID, plateNo: String!): Truck!
+ sendTruckDataToEmail(email: String!): [String]!
 }

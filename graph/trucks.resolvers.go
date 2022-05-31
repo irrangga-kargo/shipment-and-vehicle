@@ -57,6 +57,15 @@ func (r *mutationResolver) SaveTruck(ctx context.Context, id *string, plateNo st
 	return truck, nil
 }
 
+func (r *mutationResolver) SendTruckDataToEmail(ctx context.Context, email string) ([]*string, error) {
+	listTrucks := []*string{}
+	for _, v := range r.Trucks {
+		singleTruck := v.ID + v.PlateNo
+		listTrucks = append(listTrucks, &singleTruck)
+	}
+	return listTrucks, nil
+}
+
 func (r *queryResolver) PaginatedTrucks(ctx context.Context) ([]*model.Truck, error) {
 	return r.Trucks, nil
 }
